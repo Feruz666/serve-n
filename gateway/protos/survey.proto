@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+option go_package = "protos/survey";
+
+
+service AccountService {
+    rpc PostPad(PostPadRequest) returns (PostPadResponse);
+    rpc GetPadInkl(GetPadInclRequest) returns (GetPadInclResponse);
+
+  }
+
+  message PostPadRequest {
+    string geojson = 1;
+  }
+
+  message PostPadResponse {
+    int32 http_code = 1;
+    int32 lastInsertId = 2;
+  }
+
+  message GetPadInclRequest {
+    float x = 1;
+    float y = 2;
+  }
+
+  message XYZ {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+  }
+
+  message NotePnt {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+    string wellbore_id = 4;
+    string Note = 5;
+  }
+
+  message Incl {
+    int32 id = 1;
+    float x = 2;
+    float y = 3;
+    float tvdss = 4;
+    float md = 5;
+    string pad = 6;
+    string well = 7;
+    string wbore_id = 8;
+  }
+
+  message Target {
+    string name = 1;
+    XYZ head = 2;
+    XYZ targ = 3;
+    XYZ md = 4;
+  }
+
+  message GetPadInclResponse {
+    string pad_name = 1;
+    repeated XYZ line_bottom = 2;
+    repeated XYZ line_top = 3;
+    int32 errors = 4;
+    repeated XYZ line_around = 5;
+    repeated  XYZ line_new_bottom = 6;
+    string inclino_box = 7;
+    repeated NotePnt well_bottoms = 8;
+    repeated NotePnt wellheads = 9;
+    repeated NotePnt plasts = 10;
+    repeated Incl inclino = 11;
+    repeated Target targets = 12;
+    map<string, string> well_status = 13;
+  }
+
+  
