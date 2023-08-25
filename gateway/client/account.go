@@ -2,6 +2,7 @@ package client
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/Feruz666/serve/gateway/config"
 	account "github.com/Feruz666/serve/gateway/protos/account/protos"
@@ -9,17 +10,17 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-type KafkaProducer struct {
+type MessageSender struct {
 	producer   *kafka.Producer
 	topic      string
 	deliveryCh chan kafka.Event
 }
 
-func NewKafkaProducer(p *kafka.Producer, topic string) *KafkaProducer {
-	return &KafkaProducer{
+func NewMessageSender(p *kafka.Producer, topic string) *MessageSender {
+	return &MessageSender{
 		producer:   p,
 		topic:      topic,
-		deliveryCh: make(chan kafka.Event, 1000),
+		deliveryCh: make(chan kafka.Event, 10000),
 	}
 }
 
@@ -34,44 +35,52 @@ func NewAccountClient(config *config.Config) *AccountClient {
 	}
 }
 
-func (c *AccountClient) ConnectToKafka() (*kafka.Producer, error) {
-	p := NewKafkaProducer(&kafka.ConfigMap{
+func (c *AccountClient) CreatePerson() error {
+	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": "localhost:9092",
+		"client.id":         "foo",
 		"acks":              "all",
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to kafka: %w", err)
-	}
-
-	return p, nil
-}
-
-func (c AccountClient) CreatePerson() error {
-	p, err := c.ConnectToKafka()
-
-	if err != nil {
-		fmt.Errorf("c.ConnectToKafka failed: %w", err)
+		return fmt.Errorf("kafka.NewProducer failed - %w", err)
 	}
 
 	topic := "account-topic"
 	pers := &account.Person{
-		Name:  "asd",
+		Name:  "Feruz",
 		Id:    223,
 		Email: "asd@gmail.com",
 	}
 
-	buff, err := proto.Marshal(pers)
+	serializedPers, err := proto.Marshal(pers)
 
-	err = p.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{
-			Topic:     &topic,
-			Partition: int32(kafka.PartitionAny),
-		},
-		Value: buff,
-	},
-		p.deliveryCh,
-	)
+	ms := NewMessageSender(p, "account-topic")
+
+	for i := 0; i < 10; i++ {
+		err := ms.producer.Produce(&kafka.Message{
+			TopicPartition: kafka.TopicPartition{
+				Topic:     &topic,
+				Partition: kafka.PartitionAny,
+			},
+			Value: serializedPers,
+		}, ms.deliveryCh)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		e := <-ms.deliveryCh
+		m := e.(*kafka.Message)
+		if m.TopicPartition.Error != nil {
+			fmt.Printf("Delivery failed: %v\n", m.TopicPartition.Error)
+		} else {
+			fmt.Printf("Delivered message to topic %s [%d] at offset %v\n",
+				*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
+		}
+
+		
+	}
 
 	return nil
 }

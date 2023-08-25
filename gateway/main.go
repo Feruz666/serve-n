@@ -1,7 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+
+	"github.com/Feruz666/serve/gateway/config"
+	"github.com/Feruz666/serve/gateway/server"
+)
 
 func main() {
-	fmt.Println("Hi there")
+	if err := run(); err != nil {
+		panic(err)
+	}
+}
+
+func run() error {
+	cfg, err := config.InitConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load config: %w", err)
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go server.RunServer(&wg, cfg)
+
+	wg.Wait()
+
+	return nil
 }
