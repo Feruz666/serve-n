@@ -4,6 +4,8 @@ build:
 run: build
 	@./bin/gateway
 
+topics: 
+	docker exec broker kafka-topics --list --bootstrap-server localhost:9092
 
 account:
 	@protoc --go_out=paths=source_relative:./protos/account --go-grpc_out=paths=source_relative:./protos/account ./protos/account.proto

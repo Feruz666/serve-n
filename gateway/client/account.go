@@ -61,7 +61,7 @@ func (c *AccountClient) CreatePerson() error {
 		err := ms.producer.Produce(&kafka.Message{
 			TopicPartition: kafka.TopicPartition{
 				Topic:     &topic,
-				Partition: kafka.PartitionAny,
+				Partition: int32(kafka.PartitionAny),
 			},
 			Value: serializedPers,
 		}, ms.deliveryCh)
@@ -79,7 +79,6 @@ func (c *AccountClient) CreatePerson() error {
 				*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
 		}
 
-		
 	}
 
 	return nil
