@@ -1,0 +1,538 @@
+syntax = "proto3";
+
+option go_package = "protos/maps";
+
+import "google/protobuf/empty.proto";
+
+message LayerRequest {
+  string id = 1;
+}
+
+message LayerResponse {
+  string id = 1;
+  string name = 2;
+  string layer_type = 3;
+  string table_id = 4;
+  string created_at = 5;
+  string create_user_id = 6;
+  string update_user_id = 7;
+}
+
+message LayersResponse {
+  repeated LayerResponse layers = 1;
+}
+
+message AddLayerRequest {
+  string name = 1;
+  string layer_type = 2;
+  string table_id = 3;
+  string create_user_ip = 4;
+  string create_user_id = 5;
+}
+
+message AddLayerResponse {
+  string id = 1;
+  string name = 2;
+  string layer_type = 3;
+  string table_id = 4;
+  string created_at = 5;
+  string create_user_id = 6;
+}
+
+message EditLayerRequest {
+  string id = 1;
+  string name = 2;
+  string layer_type = 3;
+  string table_id = 4;
+  string update_user_ip = 5;
+  string update_user_id = 6;
+}
+
+message EditLayerResponse {
+  string id = 1;
+  string name = 2;
+  string layer_type = 3;
+  string table_id = 4;
+  string update_user_ip = 5;
+  string update_user_id = 6;
+}
+
+message DeleteLayerRequest {
+  string id = 1;
+}
+
+message AddGroupRequest {
+  string name = 1;
+  string create_user_ip = 2;
+  string create_user_id = 3;
+}
+
+message AddGroupResponse {
+  string id = 1;
+  string name = 2;
+  string create_user_id = 3;
+}
+
+message EditGroupRequest {
+  string id = 1;
+  string name = 2;
+  string update_user_ip = 3;
+  string update_user_id = 4;
+}
+
+message EditGroupResponse {
+  string id = 1;
+  string name = 2;
+  string update_user_id = 4;
+}
+
+message DeleteGroupRequest {
+  string id = 1;
+}
+
+message GroupRequest {
+  string id = 1;
+}
+
+message GroupResponse {
+  string id = 1;
+  string name = 2;
+  string create_user_id = 3;
+  string update_user_id = 4;
+}
+
+message GroupsResponse {
+  repeated GroupResponse groups = 1;
+}
+
+message MapRequest {
+  string id = 1;
+}
+
+message MapResponse {
+  string id = 1;
+  string name = 2;
+  string picture = 3;
+  string describe = 4;
+  bool active = 5;
+  string create_user_id = 6;
+  string update_user_id = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message MapsResponse {
+  repeated MapResponse maps = 1;
+}
+
+message AddMapRequest {
+  string name = 1;
+  string picture = 2;
+  string describe = 3;
+  bool active = 4;
+  string create_user_ip = 5;
+  string create_user_id = 6;
+}
+
+message AddMapResponse {
+  string id = 1;
+  string name = 2;
+  string picture = 3;
+  string describe = 4;
+  bool active = 5;
+  string create_user_id = 6;
+  string created_at = 7;
+}
+
+message EditMapRequest {
+  string id = 1;
+  string name = 2;
+  string picture = 3;
+  string describe = 4;
+  bool active = 5;
+  string update_user_ip = 6;
+  string update_user_id = 7;
+}
+
+message EditMapResponse {
+  string id = 1;
+  string name = 2;
+  string picture = 3;
+  string describe = 4;
+  bool active = 5;
+  string create_user_id = 6;
+  string update_user_id = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message DeleteMapRequest {
+  string id = 1;
+}
+
+message AddGroupLayerRelationRequest {
+  string group_id = 1;
+  string layer_id = 2;
+  int32 layer_order = 3;
+}
+
+message AddGroupLayerRelationResponse {
+  string id = 1;
+  string group_id = 2;
+  string layer_id = 3;
+  int32 layer_order = 4;
+}
+
+message DeleteGroupLayerRelationRequest {
+  string id = 1;
+}
+
+message GroupLayerRelationsResponse {
+  repeated AddGroupLayerRelationResponse relations = 1;
+}
+
+message LayerRelationGroupsRequest {
+  string layer_id = 1;
+}
+
+message LayerRelationGroupsResponse {
+  repeated GroupResponse groups = 1;
+}
+
+message GroupRelationLayersRequest {
+  string group_id = 1;
+}
+
+message GroupRelationLayersResponse {
+  repeated LayerResponse layers = 1;
+}
+
+message AddMapGroupRelationRequest {
+  string map_id = 1;
+  string group_id = 2;
+  int32 group_order = 3;
+}
+
+message AddMapGroupRelationResponse {
+  string id = 1;
+  string map_id = 2;
+  string group_id = 3;
+  int32 group_order = 4;
+}
+
+message DeleteMapGroupRelationRequest {
+  string id = 1;
+}
+
+message MapGroupRelationsResponse {
+  repeated AddMapGroupRelationResponse relations = 1;
+}
+
+message MapRelationGroupsRequest {
+  string map_id = 1;
+}
+
+message MapRelationGroupsResponse {
+  repeated GroupResponse groups = 1;
+}
+
+message GroupRelationMapsRequest {
+  string group_id = 1;
+}
+
+message GroupRelationMapsResponse {
+  repeated MapResponse maps = 1;
+}
+
+message AddStyleRequest {
+  string style_name = 1;
+  string style_type = 2;
+  string style_source_layer = 3;
+  bool style_filter_1 = 4;
+  string style_filter_field_1 = 5;
+  bool style_filter_2 = 6;
+  string style_filter_field_2 = 7;
+  string style_filter_values = 8;
+  float style_max_zoom = 9;
+  float style_min_zoom = 10;
+  bool style_label = 11;
+  string label_text_color = 12;
+  float label_text_halo_width = 13;
+  float label_text_halo_blur = 14;
+  string label_text_halo_color = 15;
+  string label_text_field = 16;
+  string label_text_font = 17;
+  string label_text_offset = 18;
+  string label_text_opacity = 19;
+  string label_text_justify = 20;
+  string label_text_line_height = 21;
+  bool label_text_ignore_placement = 22;
+  int32 label_text_padding = 23;
+  float label_text_rotate = 24;
+  float label_text_size = 25;
+  string label_text_transform = 26;
+  string fill_antialias = 27;
+  string fill_color = 28;
+  string fill_opacity = 29;
+  string fill_outline_color = 30;
+  string fill_pattern = 31;
+  string fill_visibility = 32;
+  string line_blur = 33;
+  string line_color = 34;
+  string line_gap_width = 35;
+  string line_opacity = 36;
+  string line_width = 37;
+  string line_pattern = 38;
+  string line_dasharray = 39;
+  string line_cap = 40;
+  string line_join = 41;
+  string line_visibility = 42;
+  string symbol_text_allow_overlap = 43;
+  string symbol_text_color = 44;
+  string symbol_text_field = 45;
+  string symbol_text_font = 46;
+  string symbol_text_halo_blur = 47;
+  string symbol_text_halo_color = 48;
+  string symbol_text_halo_width = 49;
+  string symbol_text_ignore_placement = 50;
+  string symbol_text_justify = 51;
+  string symbol_text_rotate = 52;
+  string symbol_text_size = 53;
+  string symbol_text_offset = 54;
+  string symbol_text_opacity = 55;
+  string create_user_ip = 56;
+  string create_user_id = 57;
+}
+
+
+message AddStyleResponse {
+  string style_name = 1;
+  string style_type = 2;
+  string style_source_layer = 3;
+  bool style_filter_1 = 4;
+  string style_filter_field_1 = 5;
+  bool style_filter_2 = 6;
+  string style_filter_field_2 = 7;
+  string style_filter_values = 8;
+  float style_max_zoom = 9;
+  float style_min_zoom = 10;
+  bool style_label = 11;
+  string label_text_color = 12;
+  float label_text_halo_width = 13;
+  float label_text_halo_blur = 14;
+  string label_text_halo_color = 15;
+  string label_text_field = 16;
+  string label_text_font = 17;
+  string label_text_offset = 18;
+  string label_text_opacity = 19;
+  string label_text_justify = 20;
+  string label_text_line_height = 21;
+  bool label_text_ignore_placement = 22;
+  int32 label_text_padding = 23;
+  float label_text_rotate = 24;
+  float label_text_size = 25;
+  string label_text_transform = 26;
+  string fill_antialias = 27;
+  string fill_color = 28;
+  string fill_opacity = 29;
+  string fill_outline_color = 30;
+  string fill_pattern = 31;
+  string fill_visibility = 32;
+  string line_blur = 33;
+  string line_color = 34;
+  string line_gap_width = 35;
+  string line_opacity = 36;
+  string line_width = 37;
+  string line_pattern = 38;
+  string line_dasharray = 39;
+  string line_cap = 40;
+  string line_join = 41;
+  string line_visibility = 42;
+  string symbol_text_allow_overlap = 43;
+  string symbol_text_color = 44;
+  string symbol_text_field = 45;
+  string symbol_text_font = 46;
+  string symbol_text_halo_blur = 47;
+  string symbol_text_halo_color = 48;
+  string symbol_text_halo_width = 49;
+  string symbol_text_ignore_placement = 50;
+  string symbol_text_justify = 51;
+  string symbol_text_rotate = 52;
+  string symbol_text_size = 53;
+  string symbol_text_offset = 54;
+  string symbol_text_opacity = 55;
+  string create_user_id = 56;
+  string id = 57;
+  string created_at = 58;
+}
+
+message EditStyleRequest {
+  string style_name = 1;
+  string style_type = 2;
+  string style_source_layer = 3;
+  bool style_filter_1 = 4;
+  string style_filter_field_1 = 5;
+  bool style_filter_2 = 6;
+  string style_filter_field_2 = 7;
+  string style_filter_values = 8;
+  float style_max_zoom = 9;
+  float style_min_zoom = 10;
+  bool style_label = 11;
+  string label_text_color = 12;
+  float label_text_halo_width = 13;
+  float label_text_halo_blur = 14;
+  string label_text_halo_color = 15;
+  string label_text_field = 16;
+  string label_text_font = 17;
+  string label_text_offset = 18;
+  string label_text_opacity = 19;
+  string label_text_justify = 20;
+  string label_text_line_height = 21;
+  bool label_text_ignore_placement = 22;
+  int32 label_text_padding = 23;
+  float label_text_rotate = 24;
+  float label_text_size = 25;
+  string label_text_transform = 26;
+  string fill_antialias = 27;
+  string fill_color = 28;
+  string fill_opacity = 29;
+  string fill_outline_color = 30;
+  string fill_pattern = 31;
+  string fill_visibility = 32;
+  string line_blur = 33;
+  string line_color = 34;
+  string line_gap_width = 35;
+  string line_opacity = 36;
+  string line_width = 37;
+  string line_pattern = 38;
+  string line_dasharray = 39;
+  string line_cap = 40;
+  string line_join = 41;
+  string line_visibility = 42;
+  string symbol_text_allow_overlap = 43;
+  string symbol_text_color = 44;
+  string symbol_text_field = 45;
+  string symbol_text_font = 46;
+  string symbol_text_halo_blur = 47;
+  string symbol_text_halo_color = 48;
+  string symbol_text_halo_width = 49;
+  string symbol_text_ignore_placement = 50;
+  string symbol_text_justify = 51;
+  string symbol_text_rotate = 52;
+  string symbol_text_size = 53;
+  string symbol_text_offset = 54;
+  string symbol_text_opacity = 55;
+  string update_user_ip = 56;
+  string update_user_id = 57;
+  string id = 58;
+}
+
+
+message EditStyleResponse {
+  string style_name = 1;
+  string style_type = 2;
+  string style_source_layer = 3;
+  bool style_filter_1 = 4;
+  string style_filter_field_1 = 5;
+  bool style_filter_2 = 6;
+  string style_filter_field_2 = 7;
+  string style_filter_values = 8;
+  float style_max_zoom = 9;
+  float style_min_zoom = 10;
+  bool style_label = 11;
+  string label_text_color = 12;
+  float label_text_halo_width = 13;
+  float label_text_halo_blur = 14;
+  string label_text_halo_color = 15;
+  string label_text_field = 16;
+  string label_text_font = 17;
+  string label_text_offset = 18;
+  string label_text_opacity = 19;
+  string label_text_justify = 20;
+  string label_text_line_height = 21;
+  bool label_text_ignore_placement = 22;
+  int32 label_text_padding = 23;
+  float label_text_rotate = 24;
+  float label_text_size = 25;
+  string label_text_transform = 26;
+  string fill_antialias = 27;
+  string fill_color = 28;
+  string fill_opacity = 29;
+  string fill_outline_color = 30;
+  string fill_pattern = 31;
+  string fill_visibility = 32;
+  string line_blur = 33;
+  string line_color = 34;
+  string line_gap_width = 35;
+  string line_opacity = 36;
+  string line_width = 37;
+  string line_pattern = 38;
+  string line_dasharray = 39;
+  string line_cap = 40;
+  string line_join = 41;
+  string line_visibility = 42;
+  string symbol_text_allow_overlap = 43;
+  string symbol_text_color = 44;
+  string symbol_text_field = 45;
+  string symbol_text_font = 46;
+  string symbol_text_halo_blur = 47;
+  string symbol_text_halo_color = 48;
+  string symbol_text_halo_width = 49;
+  string symbol_text_ignore_placement = 50;
+  string symbol_text_justify = 51;
+  string symbol_text_rotate = 52;
+  string symbol_text_size = 53;
+  string symbol_text_offset = 54;
+  string symbol_text_opacity = 55;
+  string update_user_id = 56;
+  string id = 57;
+  string created_at = 58;
+  string updated_at = 59;
+}
+
+message DeleteStyleRequest {
+  string id = 1;
+}
+
+message StyleRequest {
+  string id = 1;
+}
+
+message StylesResponse {
+  repeated AddStyleResponse styles = 1;
+}
+
+message AddLayerStyleRelationRequest {
+  string layer_id = 1;
+  string style_id = 2;
+}
+
+message AddLayerStyleRelationResponse {
+  string id = 1;
+  string layer_id = 2;
+  string style_id = 3;
+}
+
+message DeleteLayerStyleRelationRequest {
+  string id = 1;
+}
+
+message LayerStyleRelationsResponse {
+  repeated AddLayerStyleRelationResponse relations = 1;
+}
+
+message LayerRelationStylesRequest {
+  string layer_id = 1;
+}
+
+message LayerRelationStylesResponse {
+  repeated AddStyleResponse styles = 1;
+}
+
+message StyleRelationLayersRequest {
+  string style_id = 1;
+}
+
+message StyleRelationLayersResponse {
+  repeated LayerResponse layers = 1;
+}
