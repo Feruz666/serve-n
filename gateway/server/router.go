@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/Feruz666/serve/gateway/client"
-	"github.com/Feruz666/serve/gateway/config"
-	"github.com/Feruz666/serve/gateway/controllers"
+	"github.com/Feruz666/serve-n/gateway/client"
+	"github.com/Feruz666/serve-n/gateway/config"
+	"github.com/Feruz666/serve-n/gateway/controllers"
 	"github.com/gin-gonic/gin"
 )
 

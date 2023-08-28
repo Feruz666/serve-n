@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/Feruz666/serve/gateway/config"
+	"github.com/Feruz666/serve-n/gateway/config"
 )
 
 func RunServer(wg *sync.WaitGroup, cfg *config.Config) {

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "protos/account";
+
+message Person {
+  string name = 1;
+  int32 id = 2;  // Unique ID number for this person.
+  string email = 3;
+
+}
+
+

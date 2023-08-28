@@ -3,26 +3,13 @@ package client
 import (
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/Feruz666/serve/gateway/config"
-	account "github.com/Feruz666/serve/gateway/protos/account/protos"
+	"github.com/Feruz666/serve-n/gateway/config"
+	account "github.com/Feruz666/serve-n/gateway/protos/account/protos"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"google.golang.org/protobuf/proto"
 )
-
-type MessageSender struct {
-	producer   *kafka.Producer
-	topic      string
-	deliveryCh chan kafka.Event
-}
-
-func NewMessageSender(p *kafka.Producer, topic string) *MessageSender {
-	return &MessageSender{
-		producer:   p,
-		topic:      topic,
-		deliveryCh: make(chan kafka.Event, 10000),
-	}
-}
 
 // AccountClient client for account service
 type AccountClient struct {
@@ -79,6 +66,7 @@ func (c *AccountClient) CreatePerson() error {
 				*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
 		}
 
+		time.Sleep(time.Second * 2)
 	}
 
 	return nil

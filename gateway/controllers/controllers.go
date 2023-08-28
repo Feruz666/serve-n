@@ -1,8 +1,7 @@
 package controllers
 
-import (
-	"github.com/Feruz666/serve/gateway/controllers/interfaces"
-)
+import "github.com/Feruz666/serve-n/gateway/controllers/interfaces"
+
 
 // Controllers for account gateway
 type Controllers struct {

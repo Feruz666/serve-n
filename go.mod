@@ -1,10 +1,10 @@
-module github.com/Feruz666/serve
+module github.com/Feruz666/serve-n
 
 go 1.19
 
 require (
 	github.com/confluentinc/confluent-kafka-go v1.9.2
-	github.com/joho/godotenv v1.5.1
+	github.com/gin-gonic/gin v1.9.1
 	google.golang.org/protobuf v1.31.0
 )
 
@@ -17,6 +17,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/joho/godotenv v1.5.1
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
@@ -32,9 +33,4 @@ require (
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-)
-
-require (
-	github.com/gin-gonic/gin v1.9.1
-	github.com/google/go-cmp v0.5.9 // indirect
 )
