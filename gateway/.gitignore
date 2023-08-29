@@ -1,3 +1,5 @@
 .vscode/
 .idea/
 .env
+config.dev.yaml
+config.yaml

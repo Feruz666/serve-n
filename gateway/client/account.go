@@ -45,19 +45,19 @@ func (c *AccountClient) CreatePerson() error {
 	ms := NewMessageSender(p, "account-topic")
 
 	for i := 0; i < 10; i++ {
-		err := ms.producer.Produce(&kafka.Message{
+		err := ms.Producer.Produce(&kafka.Message{
 			TopicPartition: kafka.TopicPartition{
 				Topic:     &topic,
 				Partition: int32(kafka.PartitionAny),
 			},
 			Value: serializedPers,
-		}, ms.deliveryCh)
+		}, ms.DeliveryCh)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		e := <-ms.deliveryCh
+		e := <-ms.DeliveryCh
 		m := e.(*kafka.Message)
 		if m.TopicPartition.Error != nil {
 			fmt.Printf("Delivery failed: %v\n", m.TopicPartition.Error)
