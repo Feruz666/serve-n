@@ -1,11 +1,11 @@
 package client
 
 import (
+	"context"
 	"fmt"
-	"log"
-	"time"
 
 	"github.com/Feruz666/serve-n/gateway/config"
+	kfk "github.com/Feruz666/serve-n/gateway/controllers/kafka"
 	account "github.com/Feruz666/serve-n/gateway/protos/account/protos"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"google.golang.org/protobuf/proto"
@@ -22,52 +22,29 @@ func NewAccountClient(config *config.Config) *AccountClient {
 	}
 }
 
-func (c *AccountClient) CreatePerson() error {
+func (c *AccountClient) CreatePerson(ctx context.Context, user *account.Person) error {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": "localhost:9092",
-		"client.id":         "foo",
+		"client.id":         "1",
 		"acks":              "all",
 	})
+
+	pr := kfk.NewKafkaProducerConfig(p, kfk.AccountTopic, "sender", "gateway")
 
 	if err != nil {
 		return fmt.Errorf("kafka.NewProducer failed - %w", err)
 	}
 
-	topic := "account-topic"
-	pers := &account.Person{
-		Name:  "Feruz",
-		Id:    223,
-		Email: "asd@gmail.com",
+	serializedPers, err := proto.Marshal(user)
+	if err != nil {
+		return fmt.Errorf("proto.Marshal() failed - %w", err)
 	}
 
-	serializedPers, err := proto.Marshal(pers)
-
-	ms := NewMessageSender(p, "account-topic")
-
-	for i := 0; i < 10; i++ {
-		err := ms.Producer.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{
-				Topic:     &topic,
-				Partition: int32(kafka.PartitionAny),
-			},
-			Value: serializedPers,
-		}, ms.DeliveryCh)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		e := <-ms.DeliveryCh
-		m := e.(*kafka.Message)
-		if m.TopicPartition.Error != nil {
-			fmt.Printf("Delivery failed: %v\n", m.TopicPartition.Error)
-		} else {
-			fmt.Printf("Delivered message to topic %s [%d] at offset %v\n",
-				*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
-		}
-
-		time.Sleep(time.Second * 2)
+	if err := pr.SendMessage(serializedPers); err != nil {
+		return fmt.Errorf("pr.SendMessage() failed - %w", err)
 	}
+
+	fmt.Println("We are here!!!")
 
 	return nil
 }

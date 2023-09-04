@@ -3,40 +3,66 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
-	account "github.com/Feruz666/serve-n/account/protos"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"google.golang.org/protobuf/proto"
 )
 
+type OrderPlacer struct {
+	producer   *kafka.Producer
+	topic      string
+	deliveryCh chan kafka.Event
+}
+
+func NewOrderPlacer(p *kafka.Producer, topic string) *OrderPlacer {
+	return &OrderPlacer{
+		producer:   p,
+		topic:      topic,
+		deliveryCh: make(chan kafka.Event, 10000),
+	}
+}
+
+func (op *OrderPlacer) placeOrder(orderType string, size int) error {
+	var (
+		format  = fmt.Sprintf("%s - %d", orderType, size)
+		payload = []byte(format)
+	)
+	err := op.producer.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{
+			Topic:     &op.topic,
+			Partition: int32(kafka.PartitionAny),
+		},
+		Value: payload,
+	},
+		op.deliveryCh,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	<-op.deliveryCh
+	fmt.Printf("placed order on the queue %s\n", format)
+
+	return nil
+}
+
 func main() {
-	topic := "account-topic"
-	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
+	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": "localhost:9092",
-		"group.id":          "foo",
-		"auto.offset.reset": "smallest",
+		"client.id":         "foo",
+		"acks":              "all",
 	})
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Failed to create producer: %s\n", err)
 	}
 
-	err = consumer.Subscribe(topic, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("I started \n")
-
-	person := &account.Person{}
-
-	for {
-		ev := consumer.Poll(100)
-		switch e := ev.(type) {
-		case *kafka.Message:
-			err = proto.Unmarshal(e.Value, person)
-			fmt.Printf("processing order: %#v\n", person)
-		case kafka.Error:
-			fmt.Printf("%v\n", e)
+	op := NewOrderPlacer(p, "account-topic")
+	for i := 0; i < 1000; i++ {
+		if err := op.placeOrder("market", i+1); err != nil {
+			log.Fatal(err)
 		}
+		time.Sleep(time.Second * 3)
 	}
 }

@@ -11,23 +11,15 @@ import (
 )
 
 // TODO исправить функцию ...
-func Kafka_Consumer(ctx context.Context) error {
-	if len(os.Args) < 5 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <bootstrap-servers> <schema-registry> <group> <topics..>\n",
-			os.Args[0])
-		os.Exit(1)
-	}
+func Kafka_Consumer(ctx context.Context, groupId, bootstrapServers, topic string) error {
 
-	bootstrapServers := os.Args[1]
-	group := os.Args[3]
-	topics := os.Args[4:]
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
 
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers":  bootstrapServers,
-		"group.id":           group,
-		"session.timeout.ms": 6000,
+		"group.id":           groupId,
+		"session.timeout.ms": 10000,
 		"auto.offset.reset":  "earliest"})
 
 	if err != nil {
@@ -37,7 +29,7 @@ func Kafka_Consumer(ctx context.Context) error {
 
 	fmt.Printf("Created Consumer %v\n", c)
 
-	err = c.SubscribeTopics(topics, nil)
+	err = c.Subscribe(topic, nil)
 
 	run := true
 
@@ -57,6 +49,7 @@ func Kafka_Consumer(ctx context.Context) error {
 				if err != nil {
 					fmt.Printf("Failed to deserialize payload: %s\n", err)
 				} else {
+					fmt.Printf("Message from gateway: %s", e)
 				}
 				if e.Headers != nil {
 					fmt.Printf("%% Headers: %v\n", e.Headers)
