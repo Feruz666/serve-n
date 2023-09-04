@@ -8,7 +8,6 @@ import (
 	"syscall"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"google.golang.org/protobuf/proto"
 )
 
 func GetMessage() {
@@ -41,7 +40,6 @@ func GetMessage() {
 
 			switch e := ev.(type) {
 			case *kafka.Message:
-				err = proto.Unmarshal(e.Value, person)
 				if err != nil {
 					fmt.Printf("Failed to deserialize payload: %s\n", err)
 				}

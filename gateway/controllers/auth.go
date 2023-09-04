@@ -27,7 +27,6 @@ func (cn *Controllers) Register(ctx *gin.Context) {
 		})
 	}
 
-
-	
+	// TODO GET RESPONCE FROM KAFKA ...
 
 }
