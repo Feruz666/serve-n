@@ -34,6 +34,9 @@ type Gateway struct {
 		// until an IDLE HTTP session is closed
 		Idle time.Duration `yaml:"idle"`
 	} `yaml:"timeout"`
+
+
+	
 }
 
 func InitConfig() (*Config, error) {
